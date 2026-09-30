@@ -1,0 +1,19 @@
+{
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/activity/page": "app/activity/page.js",
+  "/analytics/page": "app/analytics/page.js",
+  "/auth/page": "app/auth/page.js",
+  "/downloads/page": "app/downloads/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/files/page": "app/files/page.js",
+  "/login/page": "app/login/page.js",
+  "/notifications/page": "app/notifications/page.js",
+  "/preview/page": "app/preview/page.js",
+  "/page": "app/page.js",
+  "/register/page": "app/register/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/shared/page": "app/shared/page.js",
+  "/upload/page": "app/upload/page.js"
+}

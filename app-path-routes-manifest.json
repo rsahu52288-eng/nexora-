@@ -1,0 +1,19 @@
+{
+  "/auth/callback/route": "/auth/callback",
+  "/_not-found/page": "/_not-found",
+  "/admin/page": "/admin",
+  "/activity/page": "/activity",
+  "/analytics/page": "/analytics",
+  "/auth/page": "/auth",
+  "/downloads/page": "/downloads",
+  "/dashboard/page": "/dashboard",
+  "/files/page": "/files",
+  "/login/page": "/login",
+  "/notifications/page": "/notifications",
+  "/preview/page": "/preview",
+  "/page": "/",
+  "/register/page": "/register",
+  "/settings/page": "/settings",
+  "/shared/page": "/shared",
+  "/upload/page": "/upload"
+}

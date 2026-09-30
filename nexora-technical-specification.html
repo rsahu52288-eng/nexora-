@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXORA Technical Specification & Architecture Report</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    line-height: 1.55;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .title-group h1 {
+    font-size: 26px;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.5px;
+  }
+  .title-group .subtitle {
+    font-size: 13px;
+    color: #475569;
+    font-weight: 500;
+  }
+  .badge-india {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #c2410c;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+  .doc-meta {
+    text-align: right;
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+  .doc-meta strong {
+    color: #0f172a;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 22px 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h2 .num {
+    background: #2563eb;
+    color: #ffffff;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  h3 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 14px 0 6px 0;
+  }
+  p {
+    margin: 0 0 10px 0;
+    color: #334155;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 18px 0;
+    font-size: 11.5px;
+  }
+  th {
+    background: #f1f5f9;
+    color: #0f172a;
+    text-align: left;
+    padding: 7px 10px;
+    font-weight: 700;
+    border: 1px solid #cbd5e1;
+  }
+  td {
+    padding: 7px 10px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+    color: #334155;
+  }
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+  .code-pill {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10.5px;
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #0f172a;
+  }
+  .callout {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 12px;
+  }
+  .callout strong {
+    color: #1d4ed8;
+  }
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .pipeline-card {
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+  }
+  .pipeline-card .step-title {
+    font-weight: 700;
+    color: #2563eb;
+    margin-bottom: 2px;
+  }
+  .pipeline-card .step-desc {
+    color: #64748b;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+  .formula-box {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    margin: 6px 0 10px 0;
+    color: #0f172a;
+  }
+  .footer {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #94a3b8;
+  }
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+</style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="title-group">
+      <h1>NEXORA Cloud Storage Platform</h1>
+      <div class="subtitle">System Architecture, Requirements, Algorithms & Parameter Specification</div>
+      <div class="badge-india">🇮🇳 Made in India · Built for Bharat · Zero-Knowledge Architecture</div>
+    </div>
+    <div class="doc-meta">
+      <div><strong>Document:</strong> Technical Specification</div>
+      <div><strong>Version:</strong> 1.0.0 (Production)</div>
+      <div><strong>Date:</strong> September 30, 2026</div>
+      <div><strong>Security:</strong> Client-Side AES-256-GCM</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2><span class="num">1</span> Software & Hardware Requirements</h2>
+  
+  <h3>1.1 Environment & Runtime Specifications</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Component</th>
+        <th style="width: 35%;">Minimum Requirement</th>
+        <th style="width: 40%;">Recommended Specification</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Operating System</strong></td>
+        <td>Windows 10, macOS 12 Monterey, Ubuntu 20.04 LTS</td>
+        <td>Windows 11 / macOS Sonoma / Ubuntu 22.04 LTS (x64 / ARM64)</td>
+      </tr>
+      <tr>
+        <td><strong>Node.js Runtime</strong></td>
+        <td>Node.js v18.17.0+</td>
+        <td>Node.js v20.x or v22.x LTS</td>
+      </tr>
+      <tr>
+        <td><strong>Package Manager</strong></td>
+        <td>npm v9.0.0+ / yarn 1.22+ / pnpm 8+</td>
+        <td>npm v10+ (Included with Node.js)</td>
+      </tr>
+      <tr>
+        <td><strong>Web Browser</strong></td>
+        <td>Chrome 95+, Microsoft Edge 95+, Safari 15.4+, Firefox 102+</td>
+        <td>Modern Chromium Browser (Chrome / Edge with WebCrypto & Streams)</td>
+      </tr>
+      <tr>
+        <td><strong>Client APIs</strong></td>
+        <td>Web Crypto API, Fetch API, Blob, FileReader</td>
+        <td>Full CompressionStream & Subresource Integrity Support</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 Client & Host Hardware Requirements</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Hardware Resource</th>
+        <th style="width: 35%;">Minimum Allocation</th>
+        <th style="width: 40%;">Optimal Operational Setup</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Processor (CPU)</strong></td>
+        <td>Dual-Core 2.0 GHz (x86_64 or Apple Silicon M1)</td>
+        <td>Quad-Core 2.8 GHz+ (for parallel chunk hashing & compression)</td>
+      </tr>
+      <tr>
+        <td><strong>Memory (RAM)</strong></td>
+        <td>4 GB System Memory</td>
+        <td>8 GB to 16 GB (for concurrent multi-part client array buffers)</td>
+      </tr>
+      <tr>
+        <td><strong>Storage (Disk)</strong></td>
+        <td>500 MB free disk space for bundle & cache</td>
+        <td>2 GB+ SSD for local builds, static traces, and database staging</td>
+      </tr>
+      <tr>
+        <td><strong>Network Uplink</strong></td>
+        <td>1.5 Mbps upload bandwidth</td>
+        <td>15 Mbps+ Broadband for parallel multi-part chunk uploads</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 Cloud & Database Infrastructure</h3>
+  <div class="callout">
+    <strong>PostgreSQL Database & S3 Storage:</strong> Configured via Supabase Cloud. Contains relational tables (<code>profiles</code>, <code>files</code>, <code>activity_logs</code>, <code>notifications</code>) and binary object bucket (<code>nexora-files</code>) with row-level policies.
+  </div>
+
+  <!-- SECTION 2 -->
+  <h2><span class="num">2</span> Tools and Technologies Used</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Layer / Domain</th>
+        <th style="width: 28%;">Technology & Version</th>
+        <th style="width: 47%;">Role in System Architecture</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Full-Stack Framework</strong></td>
+        <td><span class="code-pill">Next.js 15.5.26</span> (App Router)</td>
+        <td>Hybrid SSR/SSG rendering, route handling, dynamic parameters, and server client routing.</td>
+      </tr>
+      <tr>
+        <td><strong>Frontend Library</strong></td>
+        <td><span class="code-pill">React 19.0.0</span></td>
+        <td>Component lifecycle, concurrent rendering, and reactive state stores.</td>
+      </tr>
+      <tr>
+        <td><strong>Type System</strong></td>
+        <td><span class="code-pill">TypeScript 5.7.3</span></td>
+        <td>Strict static typing for file schemas, cryptographic tokens, and API communication.</td>
+      </tr>
+      <tr>
+        <td><strong>Styling & Design System</strong></td>
+        <td><span class="code-pill">Tailwind CSS 3.4.17</span></td>
+        <td>Utility-first responsive styles, glassmorphism, glowing ambient lighting, and Indian SaaS design.</td>
+      </tr>
+      <tr>
+        <td><strong>Database & Real-Time</strong></td>
+        <td><span class="code-pill">Supabase PostgreSQL</span></td>
+        <td>Primary relational storage for file metadata, user stats, aggregate metrics, and storage usage.</td>
+      </tr>
+      <tr>
+        <td><strong>Cloud Object Store</strong></td>
+        <td><span class="code-pill">Supabase Storage</span></td>
+        <td>S3-compatible persistent storage bucket (<code>nexora-files</code>) for uploaded file binaries.</td>
+      </tr>
+      <tr>
+        <td><strong>Authentication</strong></td>
+        <td><span class="code-pill">Supabase Auth SDK</span></td>
+        <td>Zero-knowledge auth tokens, password recovery links, and user session management.</td>
+      </tr>
+      <tr>
+        <td><strong>Cryptography</strong></td>
+        <td><span class="code-pill">W3C Web Crypto API</span></td>
+        <td>Client-side SHA-256 fingerprinting and AES-256-GCM symmetric buffer encryption.</td>
+      </tr>
+      <tr>
+        <td><strong>Stream Compression</strong></td>
+        <td><span class="code-pill">CompressionStream API</span></td>
+        <td>Lossless real-time Gzip stream deflate compression on client before network dispatch.</td>
+      </tr>
+      <tr>
+        <td><strong>Icons & Micro-UI</strong></td>
+        <td><span class="code-pill">Lucide React & Framer Motion</span></td>
+        <td>Consistent visual iconography and smooth UI micro-transitions.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 3 -->
+  <h2><span class="num">3</span> Project Simulation & Algorithm Implementation</h2>
+  <p>
+    NEXORA features an end-to-end <strong>9-Step Zero-Knowledge Client-Side Cryptographic Pipeline</strong> executed whenever a user uploads an asset:
+  </p>
+
+  <div class="pipeline-grid">
+    <div class="pipeline-card">
+      <div class="step-title">Step 0: File Intake</div>
+      <div class="step-desc">Header validation, MIME type detection, byte-size calculation.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 1: SHA-256 Digest</div>
+      <div class="step-desc">High-speed cryptographic hash generated via WebCrypto API.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 2: Deduplication</div>
+      <div class="step-desc">Content-addressable check; eliminates redundant cloud storage.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 3: Compression</div>
+      <div class="step-desc">Lossless Gzip stream compression; reduces payload size by ~60%.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 4: AES-256 Encryption</div>
+      <div class="step-desc">Military-grade AES-256-GCM authenticated cipher with 96-bit IV.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 5: Chunk Partitioning</div>
+      <div class="step-desc">Payload sliced into 8 discrete parts with individual sub-hashes.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 6: Parallel Upload</div>
+      <div class="step-desc">Multi-part streaming to Supabase Storage bucket.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 7: Verification</div>
+      <div class="step-desc">Server-side checksum confirmation and tamper verification.</div>
+    </div>
+    <div class="pipeline-card">
+      <div class="step-title">Step 8: Vault Committed</div>
+      <div class="step-desc">Row inserted to Supabase PostgreSQL; user storage updated.</div>
+    </div>
+  </div>
+
+  <h3>Algorithm 1: Cryptographic Fingerprinting (SHA-256)</h3>
+  <p>
+    Generates a deterministic 64-character hexadecimal digest representing the file's binary stream:
+  </p>
+  <div class="formula-box">
+    Digest = HexEncode( SHA-256( ArrayBuffer(File) ) )
+  </div>
+  <p>
+    Implemented in <span class="code-pill">lib/crypto-engine.ts</span> using <code>crypto.subtle.digest("SHA-256", buffer)</code>.
+  </p>
+
+  <h3>Algorithm 2: Content-Addressable Deduplication (CAD)</h3>
+  <p>
+    Before transmitting file bytes to cloud storage, the system checks if the file digest <code>H_new</code> already exists in the user's database:
+  </p>
+  <div class="formula-box">
+    IF ∃ H_existing = H_new THEN Duplicate = TRUE → Link Metadata → Bypass Binary Upload
+  </div>
+  <p>
+    This zero-knowledge deduplication saves user bandwidth and instantly credits duplicate savings in user analytics.
+  </p>
+
+  <h3>Algorithm 3: Lossless Stream Compression (Gzip Deflate)</h3>
+  <p>
+    Applies the DEFLATE algorithm through the browser's <code>CompressionStream("gzip")</code>:
+  </p>
+  <div class="formula-box">
+    Savings Percentage = ((Original Bytes - Compressed Bytes) / Original Bytes) × 100
+  </div>
+
+  <h3>Algorithm 4: Authenticated Zero-Knowledge Encryption (AES-256-GCM)</h3>
+  <p>
+    Encrypts the compressed payload on the client side prior to network transmission:
+  </p>
+  <div class="formula-box">
+    Ciphertext = AES-GCM-256( Key_256, Nonce_96, Payload_Buffer )
+  </div>
+  <p>
+    The encryption key is generated client-side and never exposed to intermediate transit nodes in plaintext.
+  </p>
+
+  <h3>Algorithm 5: Dynamic Multi-Part Chunk Partitioning</h3>
+  <p>
+    Partitions the encrypted buffer into <code>k = 8</code> uniform blocks:
+  </p>
+  <div class="formula-box">
+    Chunk_Size = ⌈ Total_Bytes / 8 ⌉,  Chunk_i = Slice( i × Chunk_Size, min((i+1) × Chunk_Size, Total_Bytes) )
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2><span class="num">4</span> System Parameter Settings & Configuration Constants</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 26%;">Parameter Name</th>
+        <th style="width: 22%;">Configuration Value</th>
+        <th style="width: 24%;">Module / Location</th>
+        <th style="width: 28%;">Architectural Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AES Symmetric Key Size</strong></td>
+        <td><span class="code-pill">256 bits</span> (32 bytes)</td>
+        <td><code>lib/crypto-engine.ts</code></td>
+        <td>Zero-knowledge symmetric data encryption standard.</td>
+      </tr>
+      <tr>
+        <td><strong>GCM Initialization Vector</strong></td>
+        <td><span class="code-pill">96 bits</span> (12 bytes)</td>
+        <td><code>lib/crypto-engine.ts</code></td>
+        <td>NIST recommended nonce length for AES-GCM.</td>
+      </tr>
+      <tr>
+        <td><strong>Digest Hash Algorithm</strong></td>
+        <td><span class="code-pill">SHA-256</span></td>
+        <td><code>lib/crypto-engine.ts</code></td>
+        <td>Collision-resistant content addressable hashing.</td>
+      </tr>
+      <tr>
+        <td><strong>Default Multi-Part Chunks</strong></td>
+        <td><span class="code-pill">8 Chunks</span></td>
+        <td><code>lib/crypto-engine.ts</code></td>
+        <td>Optimal parallelization for client-to-cloud streams.</td>
+      </tr>
+      <tr>
+        <td><strong>Default Free Storage Quota</strong></td>
+        <td><span class="code-pill">100 GB</span> (107,374,182,400 B)</td>
+        <td><code>lib/storage-store.ts</code></td>
+        <td>Baseline cloud storage allocated to every free user.</td>
+      </tr>
+      <tr>
+        <td><strong>Pro Plan Storage Quota</strong></td>
+        <td><span class="code-pill">2,000 GB</span> (2 TB)</td>
+        <td><code>app/page.tsx</code></td>
+        <td>Expanded capacity for enterprise and pro users.</td>
+      </tr>
+      <tr>
+        <td><strong>Minimum Password Length</strong></td>
+        <td><span class="code-pill">6 Characters</span></td>
+        <td><code>app/auth/page.tsx</code></td>
+        <td>Enforces authentication credential minimum policy.</td>
+      </tr>
+      <tr>
+        <td><strong>Storage Bucket Name</strong></td>
+        <td><span class="code-pill">nexora-files</span></td>
+        <td><code>lib/supabase-service.ts</code></td>
+        <td>Target S3-compatible Supabase storage bucket.</td>
+      </tr>
+      <tr>
+        <td><strong>Pipeline Visual Delays</strong></td>
+        <td><span class="code-pill">300ms - 650ms</span></td>
+        <td><code>upload-pipeline-flow.tsx</code></td>
+        <td>Paced UI simulation of cryptographic processing steps.</td>
+      </tr>
+      <tr>
+        <td><strong>Synthetic Compression Ratio</strong></td>
+        <td><span class="code-pill">61.6%</span></td>
+        <td><code>lib/crypto-engine.ts</code></td>
+        <td>Fallback savings percentage for unstreamable formats.</td>
+      </tr>
+      <tr>
+        <td><strong>Currency Localization</strong></td>
+        <td><span class="code-pill">INR (₹)</span></td>
+        <td><code>app/page.tsx</code></td>
+        <td>India-first localization for billing and pricing plans.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>NEXORA Cloud Storage Platform &copy; 2026 · Designed, Developed & Powered in India 🇮🇳</div>
+    <div>Confidential & Proprietary · System Architecture Specification Report</div>
+  </div>
+
+</body>
+</html>
